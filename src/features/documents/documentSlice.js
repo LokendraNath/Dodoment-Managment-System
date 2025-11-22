@@ -25,6 +25,16 @@ export const uploadFile = createAsyncThunk(
   "documents/uploadFile",
   async ({ formData, token }, { rejectWithValue }) => {
     try {
+      console.log("Upload Request - Token:", token ? "Present" : "Missing");
+      console.log("Upload Request - FormData entries:");
+      for (let pair of formData.entries()) {
+        if (pair[0] === 'file') {
+          console.log(`  ${pair[0]}:`, pair[1].name, pair[1].type);
+        } else {
+          console.log(`  ${pair[0]}:`, pair[1]);
+        }
+      }
+
       const response = await axios.post(
         `${API_BASE}/saveDocumentEntry`,
         formData,
@@ -34,8 +44,10 @@ export const uploadFile = createAsyncThunk(
           },
         }
       );
+      console.log("Upload Response:", response.data);
       return response.data;
     } catch (error) {
+      console.error("Upload Error:", error.response?.data || error.message);
       return rejectWithValue(error.response?.data || "Upload failed");
     }
   }
