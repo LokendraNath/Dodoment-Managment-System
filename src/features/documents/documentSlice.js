@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
+// CRITICAL FIX: Space hataya hai end se
 const API_BASE = "https://apis.allsoft.co/api/documentManagement";
 
 // Async thunks
@@ -15,7 +16,7 @@ export const fetchTags = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data || "Failed to fetch tags");
     }
   }
 );
@@ -29,14 +30,13 @@ export const uploadFile = createAsyncThunk(
         formData,
         {
           headers: {
-            token,
-            "Content-Type": "multipart/form-data",
+            token: token,
           },
         }
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data || "Upload failed");
     }
   }
 );
@@ -52,7 +52,7 @@ export const searchDocuments = createAsyncThunk(
       );
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response.data);
+      return rejectWithValue(error.response?.data || "Search failed");
     }
   }
 );
@@ -72,11 +72,9 @@ const documentSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // Fetch Tags
       .addCase(fetchTags.fulfilled, (state, action) => {
         state.tags = action.payload;
       })
-      // Upload File
       .addCase(uploadFile.pending, (state) => {
         state.loading = true;
         state.error = null;
@@ -88,7 +86,6 @@ const documentSlice = createSlice({
         state.loading = false;
         state.error = action.payload;
       })
-      // Search Documents
       .addCase(searchDocuments.pending, (state) => {
         state.loading = true;
         state.error = null;
