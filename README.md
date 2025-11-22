@@ -1,62 +1,64 @@
-# Document Management System - Frontend
+# Document Management System Interface
 
-A modern React-based document management system with OTP authentication, file upload, search, and preview capabilities.
+This is a frontend assignment for AllSoft, implementing a Document Management System interface using React, Redux Toolkit, and Tailwind CSS.
 
-## 🛠️ Tech Stack (2025)
+## Project Overview
 
-- **React 18** with Vite (Not CRA - outdated)
-- **Redux Toolkit** (Modern state management)
-- **Tailwind CSS v4** (Utility-first styling)
-- **React Router v6** (Navigation)
-- **Axios** (HTTP client)
+The application allows users to:
+- **Login**: Authenticate using a mobile number and OTP (handled by backend).
+- **Upload Documents**: Upload PDF/Image files with metadata (Category, Name/Department, Tags, Remarks).
+- **Search Documents**: Filter documents by category, date range, and tags.
+- **Preview & Download**: View and download uploaded files.
+- **Admin Panel**: A static interface for user creation.
 
-## 🚀 Setup & Run
+## Tech Stack
 
-1. Clone the repository
-   ```bash
-   git clone https://github.com/LokendraNath/Dodoment-Managment-System.git
-   cd document-management-system
-   ```
-2. Install dependencies
-   ```bash
-   npm install
-   ```
-3. Build for production
-   ```bash
-   npm run build
-   ```
+- **Framework**: React (Vite)
+- **State Management**: Redux Toolkit
+- **Styling**: Tailwind CSS
+- **Routing**: React Router DOM
+- **HTTP Client**: Axios
 
-## 📁 Project Structure
+## Setup Instructions
 
-```plaintext
-src/
-├── app/
-│   └── store.js
-├── features/
-│   ├── auth/
-│   │   └── authSlice.js
-│   └── documents/
-│       └── documentSlice.js
-├── pages/
-│   ├── Login.jsx
-│   ├── Dashboard.jsx
-│   ├── Upload.jsx
-│   ├── Search.jsx
-│   └── AdminPanel.jsx
-├── components/
-│   └── FileActions.jsx
-└── main.jsx
-```
+1.  **Clone the repository**:
+    ```bash
+    git clone <repository-url>
+    cd docoment-managment-system
+    ```
 
-## 🔑 Feature
+2.  **Install dependencies**:
+    ```bash
+    npm install
+    ```
 
-- OTP-based authentication
-- File upload with categories and tags
-- Advanced search with filters
-- File preview and download
-- Responsive design
-- Static admin panel
+3.  **Run the development server**:
+    ```bash
+    npm run dev
+    ```
 
-## 📞 API Endpoints
+4.  **Build for production**:
+    ```bash
+    npm run build
+    ```
 
-All APIs are configured in Redux slices. Use your mobile number for OTP.
+## Features & Implementation Details
+
+- **Incremental Commits**: The project was developed with structured, incremental commits.
+- **Responsive Design**: The UI is fully responsive and works on mobile, tablet, and desktop.
+- **Error Handling**: Robust error handling for API requests (Login, Upload, Search).
+- **Modern UI**: Uses gradients, glassmorphism, and smooth transitions for a premium feel.
+
+## API Integration
+
+The application integrates with the provided Postman collection endpoints:
+- `POST /generateOTP`
+- `POST /validateOTP`
+- `POST /saveDocumentEntry` (Multipart upload)
+- `POST /searchDocumentEntry`
+- `POST /documentTags`
+
+## Notes
+
+- Ensure the backend API is accessible.
+- If CORS issues occur during local development, a proxy might be needed or the backend should allow localhost origins.
