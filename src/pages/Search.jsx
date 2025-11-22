@@ -1,13 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { searchDocuments } from "../features/documents/documentSlice";
+import { searchDocuments, fetchTags } from "../features/documents/documentSlice";
 
 const Search = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
-  const { searchResults, loading, error } = useSelector(
+  const { searchResults, tags, loading, error } = useSelector(
     (state) => state.documents
   );
+
+  // Fetch tags on mount
+  useEffect(() => {
+    if (token) {
+      dispatch(fetchTags(token));
+    }
+  }, [token, dispatch]);
 
   const [filters, setFilters] = useState({
     major_head: "",
@@ -149,6 +156,23 @@ const Search = () => {
                 onKeyDown={handleTagAdd}
               />
             </div>
+             {/* Tag Suggestions */}
+              {tags && tags.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <span className="text-xs text-gray-500 w-full">Suggested Tags:</span>
+                  {tags.filter(t => !filters.tags.includes(t.tag_name)).map((tag, i) => (
+                     <button
+                       key={i}
+                       onClick={() => {
+                         setFilters({ ...filters, tags: [...filters.tags, tag.tag_name] });
+                       }}
+                       className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded-md transition-colors"
+                     >
+                       + {tag.tag_name}
+                     </button>
+                  ))}
+                </div>
+              )}
           </div>
 
           <button
@@ -159,6 +183,21 @@ const Search = () => {
           </button>
         </div>
       </div>
+
+      {/* Results Header & Actions */}
+      {searchResults?.length > 0 && (
+        <div className="flex justify-end mb-4">
+          <button
+            onClick={() => alert("ZIP Download functionality would be implemented here using a library like JSZip or a backend endpoint.")}
+            className="bg-indigo-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition-colors shadow-md flex items-center gap-2"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Download All as ZIP
+          </button>
+        </div>
+      )}
 
       {/* Results Section */}
       <div className="space-y-4">

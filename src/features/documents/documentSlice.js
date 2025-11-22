@@ -45,11 +45,13 @@ export const searchDocuments = createAsyncThunk(
   "documents/searchDocuments",
   async ({ payload, token }, { rejectWithValue }) => {
     try {
+      console.log("Search Payload:", payload); // DEBUG LOG
       const response = await axios.post(
         `${API_BASE}/searchDocumentEntry`,
         payload,
         { headers: { token } }
       );
+      console.log("Search Response:", response.data); // DEBUG LOG
       return response.data;
     } catch (error) {
       return rejectWithValue(error.response?.data || "Search failed");
@@ -92,7 +94,20 @@ const documentSlice = createSlice({
       })
       .addCase(searchDocuments.fulfilled, (state, action) => {
         state.loading = false;
-        state.searchResults = action.payload;
+        console.log("Search Fulfilled Payload:", action.payload);
+        // Handle various response structures
+        let results = [];
+        if (Array.isArray(action.payload)) {
+          results = action.payload;
+        } else if (Array.isArray(action.payload?.data)) {
+          results = action.payload.data;
+        } else if (Array.isArray(action.payload?.results)) {
+          results = action.payload.results;
+        } else if (Array.isArray(action.payload?.documentList)) {
+             results = action.payload.documentList;
+        }
+
+        state.searchResults = results;
       })
       .addCase(searchDocuments.rejected, (state, action) => {
         state.loading = false;

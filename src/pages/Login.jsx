@@ -67,7 +67,7 @@ const Login = () => {
               </label>
               <input
                 type="text"
-                placeholder="Enter the 4-digit OTP"
+                placeholder="Enter the 6-digit OTP"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value)}
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all bg-gray-50 hover:bg-white text-center tracking-widest text-lg"

@@ -19,7 +19,7 @@ const Upload = () => {
   const dispatch = useDispatch();
   const token = useSelector((state) => state.auth.token);
   const userId = useSelector((state) => state.auth.user?.id || "current_user");
-  const { loading, error } = useSelector((state) => state.documents);
+  const { tags, loading, error } = useSelector((state) => state.documents);
 
   useEffect(() => {
     if (token) {
@@ -337,6 +337,25 @@ const Upload = () => {
                   className="w-full outline-none text-sm"
                 />
               </div>
+              {/* Tag Suggestions */}
+              {tags && tags.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  <span className="text-xs text-gray-500 w-full">Suggested Tags:</span>
+                  {tags.filter(t => !selectedTags.some(st => st.tag_name === t.tag_name)).map((tag, i) => (
+                     <button
+                       key={i}
+                       type="button"
+                       onClick={() => {
+                         const newTag = { tag_name: tag.tag_name };
+                         setSelectedTags([...selectedTags, newTag]);
+                       }}
+                       className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-2 py-1 rounded-md transition-colors"
+                     >
+                       + {tag.tag_name}
+                     </button>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="pt-4">

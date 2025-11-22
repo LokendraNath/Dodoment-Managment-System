@@ -27,6 +27,7 @@ export const validateOTP = createAsyncThunk(
         mobile_number,
         otp,
       });
+      console.log("Validate OTP Response Data:", response.data); // DEBUG LOG
       return response.data;
     } catch (error) {
       console.error("Login Error:", error.response || error);
@@ -72,8 +73,17 @@ const authSlice = createSlice({
       .addCase(validateOTP.fulfilled, (state, action) => {
         console.log("Full API Response:", action.payload);
         state.loading = false;
-        state.token = action.payload.token;
-        localStorage.setItem("token", action.payload.token);
+        // Handle potential response structures
+        const token = action.payload.token || action.payload.data?.token || action.payload.result?.token;
+
+        if (token) {
+          state.token = token;
+          localStorage.setItem("token", token);
+        } else {
+           // Fallback if token is missing but request succeeded (unlikely but possible)
+           console.error("Token not found in response");
+           state.error = "Login succeeded but token missing";
+        }
       })
       .addCase(validateOTP.rejected, (state, action) => {
         state.loading = false;
