@@ -108,18 +108,31 @@ const Upload = () => {
     const formData = new FormData();
     formData.append("file", file);
 
+    // Convert date from YYYY-MM-DD to DD-MM-YYYY format (only if date exists)
+    const formattedDate = date ? date.split('-').reverse().join('-') : '';
+
     const data = {
       major_head: majorHead,
       minor_head: minorHead,
-      document_date: date,
+      document_date: formattedDate,
       document_remarks: remarks,
       tags: selectedTags,
       user_id: userId,
     };
+
+    console.log("=== UPLOAD DEBUG ===");
+    console.log("File:", file.name, file.type);
+    console.log("Data Object:", data);
+    console.log("Data JSON String:", JSON.stringify(data));
+    console.log("Token:", token ? "Present" : "Missing");
+
     formData.append("data", JSON.stringify(data));
 
     try {
       const result = await dispatch(uploadFile({ formData, token }));
+      console.log("Upload Result:", result);
+      console.log("=== END UPLOAD DEBUG ===");
+
       if (result.meta.requestStatus === "fulfilled") {
         setSuccessMsg("Document uploaded successfully!");
         setFile(null);
@@ -139,10 +152,10 @@ const Upload = () => {
 
   return (
     <div className="max-w-4xl mx-auto p-6">
-      <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 text-white">
+      <div className="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-100">
+        <div className="bg-black p-6 text-white">
           <h1 className="text-2xl font-bold">Upload Document</h1>
-          <p className="text-blue-100 text-sm mt-1">
+          <p className="text-gray-300 text-sm mt-1">
             Add new documents to the system
           </p>
         </div>
@@ -194,8 +207,8 @@ const Upload = () => {
             <div
               className={`relative border-2 border-dashed rounded-xl p-8 text-center transition-all ${
                 dragActive
-                  ? "border-blue-500 bg-blue-50"
-                  : "border-gray-300 hover:border-blue-400 hover:bg-gray-50"
+                  ? "border-orange-500 bg-orange-50"
+                  : "border-gray-300 hover:border-orange-400 hover:bg-gray-50"
               }`}
               onDragEnter={handleDrag}
               onDragLeave={handleDrag}
